@@ -8,6 +8,28 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 <link rel="icon" type="image/png" href="./logo.png" />
 <link rel="apple-touch-icon" href="./logo.png" />
+<script>
+// Make the favicon circular (falls back to the plain logo.png if this fails)
+(function () {
+  var img = new Image();
+  img.onload = function () {
+    try {
+      var s = 128, c = document.createElement('canvas');
+      c.width = c.height = s;
+      var x = c.getContext('2d');
+      x.beginPath();
+      x.arc(s / 2, s / 2, s / 2, 0, Math.PI * 2);
+      x.closePath();
+      x.clip();
+      var m = Math.min(img.width, img.height);
+      x.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, s, s);
+      var l = document.querySelector('link[rel="icon"]');
+      if (l) l.href = c.toDataURL('image/png');
+    } catch (e) {}
+  };
+  img.src = './logo.png';
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">

@@ -50,6 +50,10 @@
     body:not(.edit-mode) .edit-only,
     body:not(.edit-mode) .edit-only-inline,
     body:not(.edit-mode) .edit-only-block { display: none !important; }
+    body.admin-unlocked .admin-only { display: flex !important; }
+    body.admin-unlocked .admin-only-inline { display: inline-flex !important; }
+    body:not(.admin-unlocked) .admin-only,
+    body:not(.admin-unlocked) .admin-only-inline { display: none !important; }
   </style>
 </head>
 <body class="antialiased selection:bg-lime selection:text-white">
@@ -62,6 +66,7 @@
           <div class="flex items-center gap-2.5 pr-3.5 pl-1.5 py-1 rounded-full bg-card border border-hairline shrink-0 select-none">
             <span id="brand-logo-slot" class="w-9 h-9 rounded-full bg-ink text-lime flex items-center justify-center overflow-hidden shrink-0"></span>
             <span id="brand-name-display" class="font-display font-extrabold text-sm text-ink tracking-tight">Pinvara</span>
+            <span id="role-badge-pill" class="px-2 py-0.5 rounded-full bg-softpill text-[10px] font-bold text-muted uppercase tracking-wider">View Only</span>
           </div>
 
           <!-- Desktop Nav Pills -->
@@ -88,13 +93,17 @@
             </button>
           </nav>
 
-          <!-- Mobile-only Edit & Settings Buttons beside Brand -->
+          <!-- Mobile-only Admin / Edit & Settings Buttons beside Brand -->
           <div class="flex sm:hidden items-center gap-2 shrink-0">
-            <button id="edit-mode-btn-mobile" onclick="toggleEditMode()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-softpill hover:bg-hairline text-xs font-semibold text-ink transition shrink-0">
+            <button id="admin-unlock-btn-mobile" onclick="openAdminAuthModal()" class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-softpill hover:bg-hairline text-xs font-semibold text-ink transition shrink-0" title="Admin Access">
+              <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+              <span>Admin</span>
+            </button>
+            <button id="edit-mode-btn-mobile" onclick="toggleEditMode()" class="admin-only items-center gap-1.5 px-3.5 py-2 rounded-full bg-softpill hover:bg-hairline text-xs font-semibold text-ink transition shrink-0">
               <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
               <span id="edit-mode-label-mobile">Edit</span>
             </button>
-            <button onclick="openBackupModal()" title="Trip Templates, Export & Backup" class="w-9 h-9 rounded-full bg-softpill hover:bg-hairline flex items-center justify-center transition shrink-0">
+            <button onclick="openBackupModal()" title="Admin Sharing, Templates & Backup" class="admin-only w-9 h-9 rounded-full bg-softpill hover:bg-hairline items-center justify-center transition shrink-0">
               <i data-lucide="settings" class="w-4 h-4 text-ink"></i>
             </button>
           </div>
@@ -135,11 +144,15 @@
             <input id="global-search" type="text" placeholder="Search station, food, day..." oninput="handleGlobalSearch(this.value)"
               class="w-full pl-9 pr-4 py-2 rounded-full bg-softpill text-xs text-ink placeholder-muted focus:outline-none focus:ring-2 focus:ring-ink/20" />
           </div>
-          <button id="edit-mode-btn" onclick="toggleEditMode()" class="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-softpill hover:bg-hairline text-xs font-semibold text-ink transition shrink-0">
+          <button id="admin-unlock-btn" onclick="openAdminAuthModal()" class="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-softpill hover:bg-hairline text-xs font-semibold text-ink transition shrink-0" title="Admin Access">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+            <span>Admin</span>
+          </button>
+          <button id="edit-mode-btn" onclick="toggleEditMode()" class="admin-only items-center gap-1.5 px-3.5 py-2 rounded-full bg-softpill hover:bg-hairline text-xs font-semibold text-ink transition shrink-0">
             <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
             <span id="edit-mode-label">Edit</span>
           </button>
-          <button onclick="openBackupModal()" title="Trip Templates, Export & Backup" class="hidden sm:flex w-9 h-9 rounded-full bg-softpill hover:bg-hairline items-center justify-center transition shrink-0">
+          <button onclick="openBackupModal()" title="Admin Sharing, Templates & Backup" class="admin-only w-9 h-9 rounded-full bg-softpill hover:bg-hairline items-center justify-center transition shrink-0">
             <i data-lucide="settings" class="w-4 h-4 text-ink"></i>
           </button>
         </div>
@@ -168,7 +181,7 @@
             <div class="flex items-center justify-between px-1">
               <span class="text-[11px] font-bold uppercase tracking-wider text-muted">Flights &amp; Transit Passes</span>
               <div class="flex items-center gap-2">
-                <button onclick="openPassFormModal()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-ink font-display font-bold text-[10px] hover:bg-lime-dark transition">
+                <button onclick="openPassFormModal()" class="admin-only-inline items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-ink font-display font-bold text-[10px] hover:bg-lime-dark transition">
                   <i data-lucide="plus" class="w-3 h-3"></i> Add Pass
                 </button>
               </div>
@@ -182,7 +195,7 @@
               <span id="stays-header-label" class="text-[11px] font-bold uppercase tracking-wider text-muted">Accommodations</span>
               <div class="flex items-center gap-2">
                 <span id="stays-total-badge" class="text-[11px] font-bold text-ink"></span>
-                <button onclick="openStayModal()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-ink font-display font-bold text-[10px] hover:bg-lime-dark transition">
+                <button onclick="openStayModal()" class="admin-only-inline items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-ink font-display font-bold text-[10px] hover:bg-lime-dark transition">
                   <i data-lucide="plus" class="w-3 h-3"></i> Add Stay
                 </button>
               </div>
@@ -290,14 +303,14 @@
               <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                 <div>
                   <h2 id="itin-page-title" class="font-display font-extrabold text-xl sm:text-2xl tracking-tight">Day-by-Day Itinerary</h2>
-                  <p class="text-xs text-muted mt-0.5">Tap any day pill or use arrows to switch • Tap any train badge inside an activity to view or attach train guides</p>
+                  <p class="text-xs text-muted mt-0.5">Tap any day pill or use arrows to switch • Tap any train badge inside an activity to view train guides</p>
                 </div>
                 <div class="flex items-center gap-2">
                   <button onclick="openDayFormModal()" class="edit-only items-center gap-1.5 px-3.5 py-2 rounded-full bg-ink text-lime font-display font-bold text-xs hover:opacity-90 transition">
                     <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
                     <span>Add Day</span>
                   </button>
-                  <button onclick="openActivityModal()" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
+                  <button onclick="openActivityModal()" class="admin-only-inline items-center gap-1.5 px-4 py-2 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     <span>Add Activity</span>
                   </button>
@@ -326,10 +339,10 @@
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h2 id="trains-page-title" class="font-display font-extrabold text-xl sm:text-2xl tracking-tight">Train &amp; Transit Guide</h2>
-                  <p class="text-xs text-muted mt-0.5">Exact lines, stops, duration &amp; fares • Link any route directly into your itinerary activities</p>
+                  <p class="text-xs text-muted mt-0.5">Exact lines, stops, duration &amp; fares for your journey</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
-                  <button onclick="openTrainModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
+                  <button onclick="openTrainModal()" class="admin-only-inline items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     <span>Add Route</span>
                   </button>
@@ -357,7 +370,7 @@
                   <p class="text-xs text-muted mt-0.5">Curated restaurants, cafes, attractions &amp; shopping spots</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
-                  <button onclick="openPlaceModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
+                  <button onclick="openPlaceModal()" class="admin-only-inline items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     <span>Add Place</span>
                   </button>
@@ -375,14 +388,14 @@
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h2 class="font-display font-extrabold text-xl sm:text-2xl tracking-tight">Group Budget &amp; Expenses</h2>
-                  <p class="text-xs text-muted mt-0.5">Track flights, stays, rail passes, food &amp; tickets • Tap status to toggle Paid / Pending</p>
+                  <p id="budget-subtitle-text" class="text-xs text-muted mt-0.5">Overview of group flights, stays, rail passes, food &amp; tickets</p>
                 </div>
                 <div class="flex items-center gap-2">
                   <button onclick="openBudgetSettingsModal()" class="edit-only items-center gap-1.5 px-3.5 py-2 rounded-full bg-softpill hover:bg-hairline text-ink font-display font-bold text-xs transition">
                     <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
                     <span>Currency &amp; Pax</span>
                   </button>
-                  <button onclick="openExpenseModal()" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
+                  <button onclick="openExpenseModal()" class="admin-only-inline items-center gap-1.5 px-4 py-2 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     <span>Add Expense</span>
                   </button>
@@ -426,7 +439,7 @@
         <div class="bg-card rounded-[26px] p-4 card-shadow border border-hairline/70 space-y-3">
           <div class="flex items-center justify-between px-1">
             <span class="text-[11px] font-bold uppercase tracking-wider text-muted">Flights &amp; Transit Passes</span>
-            <button onclick="openPassFormModal()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-white font-display font-bold text-[10px] hover:bg-lime-dark transition">
+            <button onclick="openPassFormModal()" class="admin-only-inline items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-white font-display font-bold text-[10px] hover:bg-lime-dark transition">
               <i data-lucide="plus" class="w-3 h-3"></i> Add Pass
             </button>
           </div>
@@ -439,7 +452,7 @@
             <span id="mobile-stays-header-label" class="text-[11px] font-bold uppercase tracking-wider text-muted">Accommodations</span>
             <div class="flex items-center gap-2">
               <span id="mobile-stays-total-badge" class="text-[11px] font-bold text-ink"></span>
-              <button onclick="openStayModal()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-white font-display font-bold text-[10px] hover:bg-lime-dark transition">
+              <button onclick="openStayModal()" class="admin-only-inline items-center gap-1 px-2.5 py-1 rounded-full bg-lime text-white font-display font-bold text-[10px] hover:bg-lime-dark transition">
                 <i data-lucide="plus" class="w-3 h-3"></i> Add Stay
               </button>
             </div>
@@ -1244,18 +1257,66 @@
     };
 
     const STORAGE_KEY = 'pinvara_universal_trip_v1';
+    const ADMIN_PIN_KEY = 'pinvara_admin_pin_v1';
+    const ADMIN_SESSION_KEY = 'pinvara_admin_session_v1';
+    const DEFAULT_ADMIN_PIN = '2027';
+
     let appState = loadState();
     let currentView = 'home';
     let selectedDayId = appState.days[0]?.id || '';
     let selectedTrainCity = 'All';
     let selectedPlaceFilter = 'All';
+    let isAdmin = false;
     let editMode = false;
 
     function cloneObj(obj) {
       return JSON.parse(JSON.stringify(obj));
     }
 
+    function getAdminPin() {
+      return localStorage.getItem(ADMIN_PIN_KEY) || DEFAULT_ADMIN_PIN;
+    }
+
+    function decodeSharedHashState() {
+      try {
+        const hash = window.location.hash || '';
+        if (!hash.startsWith('#trip=')) return null;
+        const encoded = hash.slice(6);
+        const binary = atob(decodeURIComponent(encoded));
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const jsonStr = new TextDecoder().decode(bytes);
+        const parsed = JSON.parse(jsonStr);
+        if (parsed && parsed.days && parsed.trains && parsed.passes) {
+          parsed.meta = Object.assign(cloneObj(DEFAULT_JAPAN_DATA.meta), parsed.meta || {});
+          parsed.weatherCards = parsed.weatherCards || cloneObj(DEFAULT_JAPAN_DATA.weatherCards);
+          parsed.phrases = parsed.phrases || cloneObj(DEFAULT_JAPAN_DATA.phrases);
+          return parsed;
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    function encodeSharedHashState(stateObj) {
+      const lite = cloneObj(stateObj);
+      lite.passes.forEach(p => { p.ticketFile = null; });
+      lite.trains.forEach(t => { t.mapFile = null; });
+      if (lite.meta.heroBannerUrl && lite.meta.heroBannerUrl.startsWith('data:')) {
+        lite.meta.heroBannerUrl = DEFAULT_JAPAN_DATA.meta.heroBannerUrl;
+      }
+      const jsonStr = JSON.stringify(lite);
+      const bytes = new TextEncoder().encode(jsonStr);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return encodeURIComponent(btoa(binary));
+    }
+
     function loadState() {
+      const shared = decodeSharedHashState();
+      if (shared) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(shared)); } catch (e) {}
+        return shared;
+      }
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
@@ -1272,11 +1333,165 @@
     }
 
     function persist() {
+      if (!isAdmin) return;
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       } catch (e) {
         showToast('Storage full — consider smaller PDFs/images');
       }
+    }
+
+    function syncRoleUI() {
+      document.body.classList.toggle('admin-unlocked', isAdmin);
+      if (!isAdmin && editMode) {
+        editMode = false;
+        document.body.classList.remove('edit-mode');
+      }
+      const roleBadge = document.getElementById('role-badge-pill');
+      if (roleBadge) {
+        if (isAdmin) {
+          roleBadge.textContent = 'Admin';
+          roleBadge.className = 'px-2 py-0.5 rounded-full bg-ink text-lime text-[10px] font-bold uppercase tracking-wider';
+        } else {
+          roleBadge.textContent = 'View Only';
+          roleBadge.className = 'px-2 py-0.5 rounded-full bg-softpill text-[10px] font-bold text-muted uppercase tracking-wider';
+        }
+      }
+      const unlockBtns = [document.getElementById('admin-unlock-btn'), document.getElementById('admin-unlock-btn-mobile')];
+      unlockBtns.forEach(btn => {
+        if (!btn) return;
+        if (isAdmin) {
+          btn.innerHTML = `<i data-lucide="shield-check" class="w-3.5 h-3.5 text-sky-600"></i><span>Admin</span>`;
+        } else {
+          btn.innerHTML = `<i data-lucide="lock" class="w-3.5 h-3.5"></i><span>Admin</span>`;
+        }
+      });
+      const budgetSub = document.getElementById('budget-subtitle-text');
+      if (budgetSub) {
+        budgetSub.textContent = isAdmin
+          ? 'Track flights, stays, rail passes, food & tickets • Tap status to toggle Paid / Pending'
+          : 'Overview of group flights, stays, rail passes, food & tickets (Read-Only)';
+      }
+    }
+
+    function requireAdmin() {
+      if (isAdmin) return true;
+      showToast('Admin access required to make changes');
+      openAdminAuthModal();
+      return false;
+    }
+
+    function openAdminAuthModal() {
+      if (isAdmin) {
+        openModal(`
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span class="text-[10px] font-bold uppercase text-sky-700">Admin Session Active</span>
+              <h3 class="font-display font-extrabold text-xl text-ink">Admin Controls</h3>
+            </div>
+            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-softpill flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div class="p-4 rounded-2xl bg-canvas border border-hairline space-y-2">
+              <h4 class="font-display font-extrabold text-sm text-ink">Share Read-Only Viewer Page</h4>
+              <p class="text-muted text-[11px]">Copy a viewer link for family members. Their phones open in Read-Only mode with your latest itinerary.</p>
+              <button onclick="copyViewerShareLink()" class="w-full py-2.5 px-4 rounded-full bg-lime hover:bg-lime-dark text-white font-display font-extrabold text-xs transition flex items-center justify-center gap-1.5">
+                <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Copy Family Viewer Link
+              </button>
+            </div>
+
+            <form onsubmit="changeAdminPinForm(event)" class="p-4 rounded-2xl bg-canvas border border-hairline space-y-2">
+              <h4 class="font-display font-extrabold text-sm text-ink">Change Admin PIN</h4>
+              <div class="flex items-center gap-2">
+                <input id="f-new-admin-pin" type="password" required minlength="4" placeholder="New 4+ digit PIN" class="flex-1 px-3 py-2 rounded-xl bg-white border border-hairline" />
+                <button type="submit" class="px-4 py-2 rounded-full bg-ink text-lime font-display font-bold text-xs">Update</button>
+              </div>
+            </form>
+
+            <button onclick="lockAdminSession()" class="w-full py-3 rounded-full bg-red-50 hover:bg-red-100 text-red-700 font-display font-extrabold text-xs transition flex items-center justify-center gap-1.5">
+              <i data-lucide="lock" class="w-3.5 h-3.5"></i> Lock &amp; Preview User View-Only Page
+            </button>
+          </div>
+        `);
+        return;
+      }
+
+      openModal(`
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <span class="text-[10px] font-bold uppercase text-muted">Developer / Organizer Only</span>
+            <h3 class="font-display font-extrabold text-xl text-ink">Unlock Admin Page</h3>
+          </div>
+          <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-softpill flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <form onsubmit="submitAdminUnlock(event)" class="space-y-3 text-xs">
+          <p class="text-muted text-[11px]">Regular visitors only have View-Only access. Enter your Admin PIN to edit itineraries, passes, stays, and budget.</p>
+          <div>
+            <label class="font-bold text-muted uppercase text-[10px]">Admin PIN (Default: 2027)</label>
+            <input id="f-admin-pin-input" type="password" required autofocus placeholder="Enter PIN" class="w-full mt-1 px-3.5 py-2.5 rounded-xl bg-canvas border border-hairline font-display font-bold text-sm" />
+          </div>
+          <button type="submit" class="w-full py-3 rounded-full bg-lime hover:bg-lime-dark text-white font-display font-extrabold text-xs transition">Unlock Admin Mode</button>
+        </form>
+      `);
+    }
+
+    function submitAdminUnlock(e) {
+      e.preventDefault();
+      const entered = (document.getElementById('f-admin-pin-input')?.value || '').trim();
+      if (entered === getAdminPin()) {
+        isAdmin = true;
+        sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+        syncRoleUI();
+        renderAll();
+        closeModal();
+        showToast('Admin mode unlocked!');
+      } else {
+        showToast('Incorrect Admin PIN');
+      }
+    }
+
+    function changeAdminPinForm(e) {
+      e.preventDefault();
+      if (!requireAdmin()) return;
+      const np = (document.getElementById('f-new-admin-pin')?.value || '').trim();
+      if (np.length >= 4) {
+        localStorage.setItem(ADMIN_PIN_KEY, np);
+        showToast('Admin PIN updated!');
+      }
+    }
+
+    function lockAdminSession() {
+      isAdmin = false;
+      editMode = false;
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      document.body.classList.remove('edit-mode');
+      syncRoleUI();
+      renderAll();
+      closeModal();
+      showToast('Switched to User View-Only mode');
+    }
+
+    function copyViewerShareLink() {
+      const baseUrl = window.location.href.split('#')[0].split('?')[0];
+      const encoded = encodeSharedHashState(appState);
+      const shareUrl = `${baseUrl}#trip=${encoded}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          showToast('Family View-Only link copied!');
+        }).catch(() => fallbackCopyText(shareUrl));
+      } else {
+        fallbackCopyText(shareUrl);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Family View-Only link copied!');
     }
 
     function showToast(msg) {
@@ -1320,6 +1535,7 @@
     }
 
     function toggleEditMode() {
+      if (!requireAdmin()) return;
       editMode = !editMode;
       document.body.classList.toggle('edit-mode', editMode);
       const pairs = [
@@ -1637,14 +1853,16 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2.5 mt-4">
-          <a href="${esc(mapsHref)}" target="_blank" rel="noopener noreferrer" class="py-3 rounded-full bg-ink hover:opacity-90 text-lime font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
+          <a href="${esc(mapsHref)}" target="_blank" rel="noopener noreferrer" class="${isAdmin ? '' : 'col-span-2'} py-3 rounded-full bg-ink hover:opacity-90 text-lime font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
             <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
             <span>Open Google Maps</span>
           </a>
-          <button onclick="openStayModal('${s.id}')" class="py-3 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
-            <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-            <span>Edit Stay</span>
-          </button>
+          ${isAdmin ? `
+            <button onclick="openStayModal('${s.id}')" class="py-3 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
+              <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+              <span>Edit Stay</span>
+            </button>
+          ` : ''}
         </div>
       `);
     }
@@ -1767,14 +1985,16 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2.5 mt-4">
-          <button onclick="openTicketPdfModal('${p.id}')" class="py-3 rounded-full bg-ink hover:opacity-90 text-lime font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
+          <button onclick="openTicketPdfModal('${p.id}')" class="${isAdmin ? '' : 'col-span-2'} py-3 rounded-full bg-ink hover:opacity-90 text-lime font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
             <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-            <span>${p.ticketFile ? 'View Ticket PDF' : 'Upload / View PDF'}</span>
+            <span>${p.ticketFile ? 'View Ticket PDF' : (isAdmin ? 'Upload / View PDF' : 'Ticket PDF')}</span>
           </button>
-          <button onclick="openPassFormModal('${p.id}')" class="py-3 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
-            <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-            <span>Edit Pass</span>
-          </button>
+          ${isAdmin ? `
+            <button onclick="openPassFormModal('${p.id}')" class="py-3 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-extrabold text-xs flex items-center justify-center gap-1.5 transition">
+              <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+              <span>Edit Pass</span>
+            </button>
+          ` : ''}
         </div>
       `);
     }
@@ -1788,7 +2008,7 @@
         <div class="p-8 rounded-2xl bg-canvas border border-dashed border-hairline text-center space-y-2">
           <i data-lucide="file-up" class="w-8 h-8 text-muted mx-auto"></i>
           <p class="font-display font-bold text-sm text-ink">No flight/train ticket PDF uploaded yet</p>
-          <p class="text-[11px] text-muted">Upload your airline e-ticket PDF, boarding pass, or confirmation screenshot below.</p>
+          <p class="text-[11px] text-muted">${isAdmin ? 'Upload your airline e-ticket PDF, boarding pass, or confirmation screenshot below.' : 'The trip organizer has not attached a PDF ticket yet.'}</p>
         </div>
       `;
 
@@ -1831,18 +2051,20 @@
           ${viewerHtml}
 
           <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-            <label class="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
-              <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-              <span>${f ? 'Replace Ticket PDF' : 'Upload Ticket PDF'}</span>
-              <input type="file" accept=".pdf,image/*,.doc,.docx" class="hidden" onchange="handleTicketPdfUpload(event, '${p.id}')" />
-            </label>
+            ${isAdmin ? `
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>${f ? 'Replace Ticket PDF' : 'Upload Ticket PDF'}</span>
+                <input type="file" accept=".pdf,image/*,.doc,.docx" class="hidden" onchange="handleTicketPdfUpload(event, '${p.id}')" />
+              </label>
+            ` : '<span></span>'}
 
             <div class="flex items-center gap-2">
               ${f ? `
                 <a href="${f.dataUrl}" download="${esc(f.name)}" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-ink text-white font-display font-bold text-xs hover:opacity-90 transition">
                   <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
                 </a>
-                <button onclick="removeTicketPdf('${p.id}')" class="px-3 py-2.5 rounded-full bg-red-50 hover:bg-red-100 text-red-700 font-display font-bold text-xs transition">Remove</button>
+                ${isAdmin ? `<button onclick="removeTicketPdf('${p.id}')" class="px-3 py-2.5 rounded-full bg-red-50 hover:bg-red-100 text-red-700 font-display font-bold text-xs transition">Remove</button>` : ''}
               ` : ''}
             </div>
           </div>
@@ -1851,6 +2073,7 @@
     }
 
     function handleTicketPdfUpload(e, passId) {
+      if (!requireAdmin()) return;
       const file = e.target.files[0];
       if (!file) return;
       const p = appState.passes.find(x => x.id === passId);
@@ -1872,6 +2095,7 @@
     }
 
     function removeTicketPdf(passId) {
+      if (!requireAdmin()) return;
       const p = appState.passes.find(x => x.id === passId);
       if (!p) return;
       p.ticketFile = null;
@@ -1882,6 +2106,7 @@
     }
 
     function openPassFormModal(passId = '') {
+      if (!requireAdmin()) return;
       const existing = passId ? appState.passes.find(p => p.id === passId) : null;
       openModal(`
         <div class="flex items-center justify-between mb-4">
@@ -2000,6 +2225,7 @@
     }
 
     function openStayModal(stayId = '') {
+      if (!requireAdmin()) return;
       const existing = stayId ? appState.stays.find(s => s.id === stayId) : null;
       const parsed = existing ? getStayCheckInOut(existing) : { checkIn: '', checkOut: '' };
 
@@ -2172,6 +2398,7 @@
     }
 
     function openHeroEditModal() {
+      if (!requireAdmin()) return;
       const m = appState.meta;
       openModal(`
         <div class="flex items-center justify-between mb-4">
@@ -2266,6 +2493,7 @@
     }
 
     function openWeatherModal(wId = '') {
+      if (!requireAdmin()) return;
       const existing = wId ? appState.weatherCards.find(w => w.id === wId) : null;
       openModal(`
         <div class="flex items-center justify-between mb-4">
@@ -2333,6 +2561,7 @@
     }
 
     function openPhraseModal(phId = '') {
+      if (!requireAdmin()) return;
       const existing = phId ? appState.phrases.find(p => p.id === phId) : null;
       openModal(`
         <div class="flex items-center justify-between mb-4">
@@ -2483,9 +2712,11 @@
         ${filteredActs.length === 0 ? `
           <div class="bg-card rounded-[24px] p-8 card-shadow border border-hairline/70 text-center space-y-2">
             <p class="font-display font-bold text-sm text-ink">No activities planned for ${esc(day.date)} yet</p>
-            <button onclick="openActivityModal('${day.id}')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Activity to Day ${day.dayNum}
-            </button>
+            ${isAdmin ? `
+              <button onclick="openActivityModal('${day.id}')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Activity to Day ${day.dayNum}
+              </button>
+            ` : ''}
           </div>
         ` : filteredActs.map((act, idx) => {
           const linkedTrains = (act.trainIds || []).map(tid => appState.trains.find(t => t.id === tid)).filter(Boolean);
@@ -2513,26 +2744,32 @@
               </div>
 
               <!-- Linked Train Guides + Train Map Buttons -->
-              <div class="pt-2.5 border-t border-dashed border-hairline flex flex-wrap items-center justify-between gap-2">
-                <div class="flex flex-wrap items-center gap-2">
-                  ${linkedTrains.map(tr => `
-                    <div class="inline-flex items-center rounded-full bg-ink text-white overflow-hidden text-[11px]">
-                      <button onclick="openTrainDetailPopup('${tr.id}')" class="px-3 py-1.5 flex items-center gap-1.5 hover:bg-white/10 transition font-semibold">
-                        <i data-lucide="train-front" class="w-3.5 h-3.5 text-lime"></i>
-                        <span>${esc(tr.line)} • ${esc(tr.stops)} (${esc(tr.duration)})</span>
-                      </button>
-                      <button onclick="openTrainMapModal('${tr.id}')" class="px-2.5 py-1.5 bg-lime text-ink font-display font-extrabold text-[10px] hover:bg-lime-dark transition flex items-center gap-1" title="View or Upload Train Map">
-                        <i data-lucide="map" class="w-3 h-3"></i> Map
-                      </button>
-                    </div>
-                  `).join('')}
-                </div>
+              ${(linkedTrains.length || isAdmin) ? `
+                <div class="pt-2.5 border-t border-dashed border-hairline flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex flex-wrap items-center gap-2">
+                    ${linkedTrains.map(tr => `
+                      <div class="inline-flex items-center rounded-full bg-ink text-white overflow-hidden text-[11px]">
+                        <button onclick="openTrainDetailPopup('${tr.id}')" class="px-3 py-1.5 flex items-center gap-1.5 hover:bg-white/10 transition font-semibold">
+                          <i data-lucide="train-front" class="w-3.5 h-3.5 text-lime"></i>
+                          <span>${esc(tr.line)} • ${esc(tr.stops)} (${esc(tr.duration)})</span>
+                        </button>
+                        ${(tr.mapFile || isAdmin) ? `
+                          <button onclick="openTrainMapModal('${tr.id}')" class="px-2.5 py-1.5 bg-lime text-ink font-display font-extrabold text-[10px] hover:bg-lime-dark transition flex items-center gap-1" title="View Train Map">
+                            <i data-lucide="map" class="w-3 h-3"></i> Map
+                          </button>
+                        ` : ''}
+                      </div>
+                    `).join('')}
+                  </div>
 
-                <button onclick="openLinkTrainModal('${day.id}', '${act.id}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-softpill hover:bg-lime text-ink font-display font-bold text-[11px] transition">
-                  <i data-lucide="train-front" class="w-3 h-3"></i>
-                  <span>${linkedTrains.length ? 'Edit Train' : '+ Add Train'}</span>
-                </button>
-              </div>
+                  ${isAdmin ? `
+                    <button onclick="openLinkTrainModal('${day.id}', '${act.id}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-softpill hover:bg-lime text-ink font-display font-bold text-[11px] transition">
+                      <i data-lucide="train-front" class="w-3 h-3"></i>
+                      <span>${linkedTrains.length ? 'Edit Train' : '+ Add Train'}</span>
+                    </button>
+                  ` : ''}
+                </div>
+              ` : ''}
             </div>
           `;
         }).join('')}
@@ -2560,14 +2797,20 @@
           </div>
           ${tr.tip ? `<div class="rounded-2xl bg-white/10 p-3 text-xs text-white/90">${esc(tr.tip)}</div>` : ''}
         </div>
-        <div class="grid grid-cols-2 gap-2.5 mt-4">
-          <button onclick="openTrainMapModal('${tr.id}')" class="py-3 rounded-full bg-ink text-lime font-display font-extrabold text-xs flex items-center justify-center gap-1.5">
-            <i data-lucide="map" class="w-3.5 h-3.5"></i> ${tr.mapFile ? 'View Train Map' : 'Upload Train Map'}
-          </button>
-          <button onclick="openTrainModal('${tr.id}')" class="py-3 rounded-full bg-lime text-ink font-display font-extrabold text-xs flex items-center justify-center gap-1.5">
-            <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit Route
-          </button>
-        </div>
+        ${(tr.mapFile || isAdmin) ? `
+          <div class="grid grid-cols-2 gap-2.5 mt-4">
+            ${(tr.mapFile || isAdmin) ? `
+              <button onclick="openTrainMapModal('${tr.id}')" class="${isAdmin ? '' : 'col-span-2'} py-3 rounded-full bg-ink text-lime font-display font-extrabold text-xs flex items-center justify-center gap-1.5">
+                <i data-lucide="map" class="w-3.5 h-3.5"></i> ${tr.mapFile ? 'View Train Map' : 'Upload Train Map'}
+              </button>
+            ` : ''}
+            ${isAdmin ? `
+              <button onclick="openTrainModal('${tr.id}')" class="py-3 rounded-full bg-lime text-ink font-display font-extrabold text-xs flex items-center justify-center gap-1.5">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit Route
+              </button>
+            ` : ''}
+          </div>
+        ` : ''}
       `);
     }
 
@@ -2579,7 +2822,7 @@
         <div class="p-8 rounded-2xl bg-canvas border border-dashed border-hairline text-center space-y-2">
           <i data-lucide="map" class="w-8 h-8 text-muted mx-auto"></i>
           <p class="font-display font-bold text-sm text-ink">No train map uploaded for this route yet</p>
-          <p class="text-[11px] text-muted">Upload any file type (subway map image, PDF route map, screenshot, etc.)</p>
+          <p class="text-[11px] text-muted">${isAdmin ? 'Upload any file type (subway map image, PDF route map, screenshot, etc.)' : 'No map file attached by the organizer.'}</p>
         </div>
       `;
       if (f && f.dataUrl) {
@@ -2602,15 +2845,17 @@
         <div class="space-y-4">
           ${viewerHtml}
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <label class="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
-              <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-              <span>${f ? 'Replace Map File' : 'Upload Train Map (Any File)'}</span>
-              <input type="file" class="hidden" onchange="handleTrainMapUpload(event, '${tr.id}')" />
-            </label>
+            ${isAdmin ? `
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-lime hover:bg-lime-dark text-ink font-display font-bold text-xs transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>${f ? 'Replace Map File' : 'Upload Train Map (Any File)'}</span>
+                <input type="file" class="hidden" onchange="handleTrainMapUpload(event, '${tr.id}')" />
+              </label>
+            ` : '<span></span>'}
             ${f ? `
               <div class="flex items-center gap-2">
                 <a href="${f.dataUrl}" download="${esc(f.name)}" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-ink text-white font-display font-bold text-xs">Download</a>
-                <button onclick="removeTrainMap('${tr.id}')" class="px-3 py-2.5 rounded-full bg-red-50 text-red-700 font-display font-bold text-xs">Remove</button>
+                ${isAdmin ? `<button onclick="removeTrainMap('${tr.id}')" class="px-3 py-2.5 rounded-full bg-red-50 text-red-700 font-display font-bold text-xs">Remove</button>` : ''}
               </div>
             ` : ''}
           </div>
@@ -2619,6 +2864,7 @@
     }
 
     function handleTrainMapUpload(e, trainId) {
+      if (!requireAdmin()) return;
       const file = e.target.files[0];
       if (!file) return;
       const tr = appState.trains.find(t => t.id === trainId);
@@ -2634,6 +2880,7 @@
     }
 
     function removeTrainMap(trainId) {
+      if (!requireAdmin()) return;
       const tr = appState.trains.find(t => t.id === trainId);
       if (!tr) return;
       tr.mapFile = null;
@@ -2643,6 +2890,7 @@
     }
 
     function openLinkTrainModal(dayId, actId) {
+      if (!requireAdmin()) return;
       const day = appState.days.find(d => d.id === dayId);
       const act = day?.activities.find(a => a.id === actId);
       if (!act) return;
@@ -2690,6 +2938,7 @@
     }
 
     function moveActivity(dayId, idx, dir) {
+      if (!requireAdmin()) return;
       const day = appState.days.find(d => d.id === dayId);
       if (!day) return;
       const target = idx + dir;
@@ -2702,6 +2951,7 @@
     }
 
     function deleteActivity(dayId, actId) {
+      if (!requireAdmin()) return;
       const day = appState.days.find(d => d.id === dayId);
       if (!day) return;
       day.activities = day.activities.filter(a => a.id !== actId);
@@ -2796,6 +3046,7 @@
     }
 
     function openActivityModal(dayId = selectedDayId, actId = '') {
+      if (!requireAdmin()) return;
       const targetDayIdx = appState.days.findIndex(d => d.id === dayId);
       const day = targetDayIdx > -1 ? appState.days[targetDayIdx] : appState.days[0];
       const existing = actId ? day?.activities.find(a => a.id === actId) : null;
@@ -2975,6 +3226,7 @@
     }
 
     function openDayFormModal(dayId = '') {
+      if (!requireAdmin()) return;
       const existing = dayId ? appState.days.find(d => d.id === dayId) : null;
       const nextNum = appState.days.length + 1;
       openModal(`
@@ -3088,15 +3340,18 @@
               <div class="text-right"><span class="text-muted text-[9px] uppercase font-bold block">Transfers</span><span class="font-bold text-ink">${esc(tr.transfers)}</span></div>
             </div>
             ${tr.tip ? `<p class="text-[11px] text-muted bg-canvas rounded-2xl p-3 border border-hairline">${esc(tr.tip)}</p>` : ''}
-            <button onclick="openTrainMapModal('${tr.id}')" class="w-full py-2 rounded-full bg-softpill hover:bg-lime text-ink font-display font-bold text-[11px] flex items-center justify-center gap-1.5 transition">
-              <i data-lucide="map" class="w-3.5 h-3.5"></i> ${tr.mapFile ? 'View Attached Train Map' : 'Upload / View Train Map'}
-            </button>
+            ${(tr.mapFile || isAdmin) ? `
+              <button onclick="openTrainMapModal('${tr.id}')" class="w-full py-2 rounded-full bg-softpill hover:bg-lime text-ink font-display font-bold text-[11px] flex items-center justify-center gap-1.5 transition">
+                <i data-lucide="map" class="w-3.5 h-3.5"></i> ${tr.mapFile ? 'View Attached Train Map' : 'Upload / View Train Map'}
+              </button>
+            ` : ''}
           </div>
         </div>
       `).join('');
     }
 
     function openTrainModal(trainId = '') {
+      if (!requireAdmin()) return;
       const existing = trainId ? appState.trains.find(t => t.id === trainId) : null;
       openModal(`
         <div class="flex items-center justify-between mb-4">
@@ -3232,6 +3487,7 @@
     }
 
     function openPlaceModal(placeId = '') {
+      if (!requireAdmin()) return;
       const existing = placeId ? appState.places.find(p => p.id === placeId) : null;
       openModal(`
         <div class="flex items-center justify-between mb-4">
@@ -3344,9 +3600,15 @@
           </div>
           <div class="flex items-center gap-2.5 shrink-0">
             <span class="font-display font-extrabold text-sm text-ink">${money(b.amount)}</span>
-            <button onclick="toggleBudgetPaid('${b.id}')" class="px-3 py-1 rounded-full text-[11px] font-display font-extrabold transition ${b.paid ? 'bg-lime text-ink' : 'bg-softpill text-muted hover:bg-hairline'}">
-              ${b.paid ? 'Paid' : 'Pending'}
-            </button>
+            ${isAdmin ? `
+              <button onclick="toggleBudgetPaid('${b.id}')" class="px-3 py-1 rounded-full text-[11px] font-display font-extrabold transition ${b.paid ? 'bg-lime text-ink' : 'bg-softpill text-muted hover:bg-hairline'}">
+                ${b.paid ? 'Paid' : 'Pending'}
+              </button>
+            ` : `
+              <span class="px-3 py-1 rounded-full text-[11px] font-display font-extrabold ${b.paid ? 'bg-lime text-ink' : 'bg-softpill text-muted'}">
+                ${b.paid ? 'Paid' : 'Pending'}
+              </span>
+            `}
             <button onclick="openExpenseModal('${b.id}')" class="edit-only w-7 h-7 rounded-full bg-softpill hover:bg-lime items-center justify-center"><i data-lucide="pencil" class="w-3 h-3"></i></button>
           </div>
         </div>
@@ -3354,6 +3616,7 @@
     }
 
     function toggleBudgetPaid(id) {
+      if (!requireAdmin()) return;
       const item = appState.budget.find(b => b.id === id);
       if (!item) return;
       item.paid = !item.paid;
@@ -3363,6 +3626,7 @@
     }
 
     function openExpenseModal(expId = '') {
+      if (!requireAdmin()) return;
       const existing = expId ? appState.budget.find(b => b.id === expId) : null;
       openModal(`
         <div class="flex items-center justify-between mb-4">
@@ -3430,6 +3694,7 @@
     }
 
     function openBudgetSettingsModal() {
+      if (!requireAdmin()) return;
       openModal(`
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-display font-extrabold text-xl text-ink">Currency &amp; Group Size</h3>
@@ -3465,15 +3730,22 @@
     // 10. BACKUP, EXPORT & TEMPLATES MODAL
     // =========================================================================
     function openBackupModal() {
+      if (!requireAdmin()) return;
       openModal(`
         <div class="flex items-center justify-between mb-4">
           <div>
-            <span class="text-[10px] font-bold uppercase text-muted">Trip Templates &amp; Data</span>
-            <h3 class="font-display font-extrabold text-xl text-ink">Manage Trip &amp; Backups</h3>
+            <span class="text-[10px] font-bold uppercase text-muted">Admin Sharing &amp; Backups</span>
+            <h3 class="font-display font-extrabold text-xl text-ink">Share &amp; Manage Trip</h3>
           </div>
           <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-softpill flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
         </div>
         <div class="space-y-3 text-xs">
+          <div class="p-4 rounded-2xl bg-softpill/50 border border-hairline space-y-2">
+            <h4 class="font-display font-extrabold text-sm text-ink">Share Read-Only Link with Family</h4>
+            <p class="text-muted text-[11px]">Generates a link with your updated schedule. When family members open it, they see your exact itinerary in View-Only mode.</p>
+            <button onclick="copyViewerShareLink()" class="w-full py-2.5 px-3 rounded-full bg-lime hover:bg-lime-dark text-white font-display font-extrabold text-[11px] transition">Copy Family View-Only Link</button>
+          </div>
+
           <div class="p-4 rounded-2xl bg-canvas border border-hairline space-y-2">
             <h4 class="font-display font-extrabold text-sm text-ink">Switch Trip Template</h4>
             <p class="text-muted text-[11px]">Start fresh for any destination or load the 14-day Japan family sample.</p>
@@ -3499,6 +3771,7 @@
     }
 
     function loadTemplate(kind) {
+      if (!requireAdmin()) return;
       appState = cloneObj(kind === 'blank' ? BLANK_COUNTRY_TEMPLATE : DEFAULT_JAPAN_DATA);
       selectedDayId = appState.days[0]?.id || '';
       persist();
@@ -3561,6 +3834,7 @@
     }
 
     function renderAll() {
+      syncRoleUI();
       renderBrand();
       renderSidebar();
       renderCurrentView();
@@ -3568,7 +3842,14 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (sessionStorage.getItem(ADMIN_SESSION_KEY) === '1') {
+        isAdmin = true;
+      }
       renderAll();
+      if (params.get('admin') === '1' && !isAdmin) {
+        openAdminAuthModal();
+      }
     });
   </script>
 </body>

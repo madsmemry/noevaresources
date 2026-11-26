@@ -6,7 +6,8 @@
   <title>Pinvara • Universal Trip Planner & Companion</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="apple-touch-icon" href="./logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -65,7 +66,7 @@
         <div class="flex items-center justify-between lg:justify-start gap-2 min-w-0">
           <!-- Brand Logo & Name -->
           <div class="flex items-center gap-2.5 pr-3.5 pl-1.5 py-1 rounded-full bg-card border border-hairline shrink-0 select-none">
-            <span id="brand-logo-slot" class="w-9 h-9 rounded-full bg-ink text-lime flex items-center justify-center overflow-hidden shrink-0"></span>
+            <header class="sticky top-0 z-40 bg-canvas/95 backdrop-blur-md -mx-4 sm:-mx-6 lg:-mx-10 px-4 sm:px-6 lg:px-10 pt-4 sm:pt-5 pb-4 mb-6 sm:mb-8 border-b border-hairline/60 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
             <span id="brand-name-display" class="font-display font-extrabold text-sm text-ink tracking-tight">Pinvara</span>
             <span id="role-badge-pill" class="px-2 py-0.5 rounded-full bg-softpill text-[10px] font-bold text-muted uppercase tracking-wider">User</span>
           </div>
@@ -1613,10 +1614,17 @@
     // =========================================================================
     // 3. STATIC BRAND HEADER (DEVELOPER-OWNED)
     // =========================================================================
+    const DEFAULT_PIN_SVG = `<svg viewBox="0 0 36 36" class="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 5C12.2 5 7.5 9.6 7.5 15.3C7.5 22.1 18 31 18 31C18 31 28.5 22.1 28.5 15.3C28.5 9.6 23.8 5 18 5Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="18" cy="15" r="3.5" fill="currentColor"/>
+    </svg>`;
+    
     function renderBrand() {
       const slot = document.getElementById('brand-logo-slot');
       const nameEl = document.getElementById('brand-name-display');
-      if (slot) slot.innerHTML = DEFAULT_PIN_SVG;
+      if (slot) {
+        slot.innerHTML = `<img src="./logo.png" alt="Pinvara Logo" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML=DEFAULT_PIN_SVG" />`;
+      }
       if (nameEl) nameEl.textContent = 'Pinvara';
       document.title = `Pinvara • ${appState.meta.heroTitle || 'Trip Planner'}`;
     }

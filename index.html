@@ -42,32 +42,37 @@ tailwind.config = {
         display: ['Plus Jakarta Sans', 'sans-serif'],
       },
       colors: {
-        canvas: '#F8FAFC',
+        // Sakura theme
+        canvas: '#FFF7F9',
         card: '#FFFFFF',
-        ink: '#0F172A',
-        muted: '#475569',
-        lime: '#0284C7',
-        'lime-dark': '#0369A1',
-        softpill: '#E0F2FE',
-        hairline: '#BAE6FD',
-        ambertag: '#0EA5E9',
+        ink: '#2A1A2E',
+        muted: '#6E5A70',
+        lime: '#C2255C',
+        'lime-dark': '#A31D4D',
+        softpill: '#FCE7EF',
+        hairline: '#F6CADA',
+        ambertag: '#E8648A',
+        // Re-tint the accent palettes used by cards, tags and icons
+        sky:    { 50: '#FFF1F5', 100: '#FDE0EA', 200: '#FBCFDD', 600: '#C2255C', 700: '#A31D4D', 800: '#86193F' },
+        blue:   { 50: '#FFF3EC', 100: '#FEE6D6', 200: '#FDD9C3', 700: '#B94A1E', 800: '#933B18' },
+        indigo: { 50: '#F8F0FB', 100: '#EEDAF6', 200: '#E6CDF0', 600: '#8E3BAE', 700: '#752F91', 800: '#5E2675' },
       }
     }
   }
 }
 </script>
 <style>
-body { background-color: #F8FAFC; color: #0F172A; }
+body { background-color: #FFF7F9; color: #2A1A2E; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .writing-vertical { writing-mode: vertical-rl; transform: rotate(180deg); }
-.card-shadow { box-shadow: 0 2px 14px rgba(2, 132, 199, 0.06); }
-.modal-backdrop { background: rgba(15, 23, 42, 0.52); backdrop-filter: blur(4px); }
-/* High-contrast text & hover overrides for Ocean Blue primary (#0284C7) */
+.card-shadow { box-shadow: 0 2px 14px rgba(194, 37, 92, 0.07); }
+.modal-backdrop { background: rgba(42, 26, 46, 0.52); backdrop-filter: blur(4px); }
+/* High-contrast text & hover overrides for Sakura primary (#C2255C) */
 .bg-lime { color: #FFFFFF !important; }
-.bg-lime:hover, .hover\:bg-lime:hover { background-color: #0369A1 !important; color: #FFFFFF !important; }
-.text-lime { color: #38BDF8 !important; }
-.bg-ink .text-lime, .bg-ink.text-lime { color: #7DD3FC !important; }
+.bg-lime:hover, .hover\:bg-lime:hover { background-color: #A31D4D !important; color: #FFFFFF !important; }
+.text-lime { color: #E64980 !important; }
+.bg-ink .text-lime, .bg-ink.text-lime { color: #FBC4DA !important; }
 body.edit-mode .edit-only { display: flex !important; }
 body.edit-mode .edit-only-inline { display: inline-flex !important; }
 body.edit-mode .edit-only-block { display: block !important; }
@@ -1748,9 +1753,9 @@ function renderSidebar() {
   if (mTotalBadge) mTotalBadge.textContent = staysCostText;
 
   const stayThemes = [
-    { bar: 'bg-sky-600', iconBg: 'bg-sky-50 text-sky-700 border-sky-200', badge: 'bg-sky-50 text-sky-800', icon: 'building-2' },
-    { bar: 'bg-blue-700', iconBg: 'bg-blue-50 text-blue-700 border-blue-200', badge: 'bg-blue-50 text-blue-800', icon: 'home' },
-    { bar: 'bg-indigo-600', iconBg: 'bg-indigo-50 text-indigo-700 border-indigo-200', badge: 'bg-indigo-50 text-indigo-800', icon: 'bed-double' }
+    { bar: 'bg-sky-600', iconBg: 'bg-sky-50 text-sky-700 border-sky-200', badge: 'bg-sky-100 text-sky-800 border border-sky-200', icon: 'building-2' },
+    { bar: 'bg-blue-700', iconBg: 'bg-blue-50 text-blue-700 border-blue-200', badge: 'bg-blue-100 text-blue-800 border border-blue-200', icon: 'home' },
+    { bar: 'bg-indigo-600', iconBg: 'bg-indigo-50 text-indigo-700 border-indigo-200', badge: 'bg-indigo-100 text-indigo-800 border border-indigo-200', icon: 'bed-double' }
   ];
 
   const staysHtml = appState.stays.map((s, idx) => {
